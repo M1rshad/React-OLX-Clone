@@ -17,6 +17,7 @@ function Login() {
             id="fname"
             name="email"
             defaultValue="John"
+
           />
           <br />
           <label htmlFor="lname">Password</label>
