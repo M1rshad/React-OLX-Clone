@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth, updateProfile } from 'firebase/auth';
 import { setDoc, doc } from 'firebase/firestore';
 import { app, db } from '../../firebase/config';
 import { useNavigate, Link } from 'react-router-dom';
@@ -38,6 +38,7 @@ export default function Signup() {
         username: username,
         phone: phone,
       });
+      await updateProfile(user, {displayName:username})
 
       console.log('User information added to Firestore, navigating to login...');
       navigate('/login');

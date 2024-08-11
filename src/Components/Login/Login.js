@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { useNavigate, Link } from 'react-router-dom';
 import { app } from '../../firebase/config';
 import Logo from '../../olx-logo.png';
 import './Login.css';
+import { AuthContext } from '../../context/AuthContext';
 
 
 function Login() {
@@ -12,6 +13,7 @@ function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   
+  const {setUser} = useContext(AuthContext)
   const auth = getAuth(app);
   
   const handleSubmit  = async (e) =>{
@@ -20,10 +22,12 @@ function Login() {
 
     try{
       console.log('Logging in user');
-      const userCredential = signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log('user credential : ', userCredential);
-      const user = (await userCredential).user
+      const user = (userCredential).user
       console.log('Logged in user : ', user);
+      setUser(user);
+      
 
       navigate('/')
     }catch (error) {
@@ -42,7 +46,7 @@ function Login() {
   return (
     <div>
       <div className="loginParentDiv">
-        <img width="200px" height="200px" src={Logo}></img>
+        <img width="200px" height="200px" src={Logo} alt='Logo'></img>
         <form onSubmit={handleSubmit}> 
           <label htmlFor="email">Email</label>
           <br />
@@ -71,7 +75,7 @@ function Login() {
           <button type='submit'>Login</button>
         </form>
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        <Link to={'/signup'}><a>Signup</a></Link>
+        <Link to={'/signup'}>Signup</Link>
       </div>
     </div>
   );
